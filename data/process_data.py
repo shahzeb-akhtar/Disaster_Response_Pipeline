@@ -1,16 +1,53 @@
 import sys
-
+import pandas as pd
+import numpy as np
+from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-    pass
-
-
+    #read csv files
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    
+    # merge datasets
+    merged_df = messages.merge(categories, on=['id'])
+    
+    return merged_df
+    
+    
 def clean_data(df):
-    pass
+     # create a dataframe of the 36 individual category columns
+    categories_split = df['categories'].str.split(';', expand=True)
+    
+    # select the first row of the categories_split dataframe
+    row = categories_split.iloc[0]
+    
+    # use this row to extract a list of new column names for categories
+    category_colnames = []
+    for category in row:
+        category_colnames.append(category.split('-')[0])
 
+    # rename the columns of `categories_split` df
+    categories_split.columns = category_colnames
+    
+    #Convert category values to just numbers 0 or 1
+    for column in categories_split:
+        # set each value to be the last character of the string and convert to numeric
+        categories_split[column] = pd.to_numeric(categories_split[column].str[-1], downcast='integer')
+    
+    # drop the original categories column from `df`
+    df.drop(['categories'], axis=1, inplace=True)
+    
+    # concatenate the original dataframe with the new `categories` dataframe
+    new_df = df.join(categories_split, on='id', how='inner')
+
+    # drop duplicates
+    new_df.drop_duplicates(inplace=True)
+    
+    return new_df
 
 def save_data(df, database_filename):
-    pass  
+    engine = create_engine('sqlite:///' + database_filename)
+    df.to_sql(database_filename, engine, index=False, if_exists= 'replace')  
 
 
 def main():

@@ -1,6 +1,7 @@
 import json
 import plotly
 import pandas as pd
+import sys
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -27,7 +28,39 @@ def tokenize(text):
 
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
-df = pd.read_sql_table('data\\DisasterResponse.db', engine)
+df = pd.read_sql_table('DataTable', engine)
+results_df = pd.read_sql_table('ResultTable', engine)
+
+#prepare viz data
+categories_df = df.iloc[:,4:]
+
+#data for bar chart
+sum_df = pd.DataFrame(categories_df.sum(), columns=['Value'])
+sum_df['Name'] = sum_df.index
+
+#data for co-relation between categories matrix
+
+corr_mat = categories_df.corr()
+#insert indices as first columns
+corr_mat.insert(0, 'Name', corr_mat.index)
+#insert columns as first row
+new_row = pd.Series(corr_mat.columns)
+row_df = pd.DataFrame(new_row).T
+row_df.columns = corr_mat.columns
+corr_mat = pd.concat([row_df, corr_mat], ignore_index=True)
+# convert to 2d array
+corr_arr = corr_mat.to_numpy()
+#make sure [0,0] element is blank as required by JS library
+corr_arr[0,0] = ''
+
+#same steps as for corr df
+results_df.insert(0, 'Name', categories_df.columns)
+new_row = pd.Series(results_df.columns)
+row_df = pd.DataFrame(new_row).T
+row_df.columns = results_df.columns
+results_df = pd.concat([row_df, results_df], ignore_index=True)
+results_arr = results_df.to_numpy()
+results_arr[0,0] = ''
 
 # load model
 model = joblib.load("../models/classifier.pkl")
@@ -38,59 +71,26 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/index')
 def index():
     
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
-    
-    # create visuals
-    # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
-
-            'layout': {
-                'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
-        }
-    ]
-    
-    # encode plotly graphs in JSON
-    ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
-    graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    
-    # render web page with plotly graphs
-    return render_template('master.html', ids=ids, graphJSON=graphJSON)
-
+    # render web page send data for charts
+    return render_template('master.html', catsJSON=sum_df.to_json(orient='records'), corr_arr=corr_arr.tolist(), results_arr = results_arr.tolist())
 
 # web page that handles user query and displays model results
-@app.route('/go')
-def go():
+@app.route('/predict', methods=['POST'])
+def predict():
     # save user input in query
-    query = request.args.get('query', '') 
-
+    query = request.form.getlist('query')[0]    
+    
+    predicted_classes = []
     # use model to predict classification for query
     classification_labels = model.predict([query])[0]
-    classification_results = dict(zip(df.columns[4:], classification_labels))
-
-    # This will render the go.html Please see that file. 
-    return render_template(
-        'go.html',
-        query=query,
-        classification_result=classification_results
-    )
-
+    
+    for i, col in enumerate(list(df.columns[4:])):
+        if(classification_labels[i] == 1):
+            predicted_classes.append(col)
+    
+    return jsonify({'result': predicted_classes})
+    #return render_template('go.html', predictions=predicted_classes)
+    
 
 def main():
     app.run(host='127.0.0.1', port=3001, debug=True)

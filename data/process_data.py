@@ -34,6 +34,9 @@ def clean_data(df):
         # set each value to be the last character of the string and convert to numeric
         categories_split[column] = pd.to_numeric(categories_split[column].str[-1], downcast='integer')
     
+    #drop any column with all zero - we cant predict on all 0s
+    categories_split = categories_split[categories_split.columns[categories_split.sum()>0]]
+    
     # drop the original categories column from `df`
     df.drop(['categories'], axis=1, inplace=True)
     
@@ -43,11 +46,17 @@ def clean_data(df):
     # drop duplicates
     new_df.drop_duplicates(inplace=True)
     
+    # expect only 0 and 1
+    if 'related' in new_df.columns:
+        indicesToDrop = new_df[new_df['related'] == 2].index
+        if len(indicesToDrop) > 0:
+            new_df.drop(indicesToDrop , inplace=True)
+    
     return new_df
 
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///' + database_filename)
-    df.to_sql(database_filename, engine, index=False, if_exists= 'replace')  
+    df.to_sql('DataTable', engine, index=False, if_exists= 'replace')  
 
 
 def main():

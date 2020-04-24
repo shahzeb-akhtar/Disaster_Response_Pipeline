@@ -5,8 +5,6 @@ import re
 import pandas as pd
 import numpy as np
 import pickle
-import matplotlib.pyplot as plt
-import seaborn as sns
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from sqlalchemy import create_engine
@@ -15,7 +13,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import confusion_matrix, make_scorer, f1_score, precision_score, recall_score, accuracy_score
+from sklearn.metrics import make_scorer, f1_score, precision_score, recall_score, accuracy_score
 
 url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 def tokenize(text):
@@ -52,7 +50,7 @@ def performance_metric(y_true, y_pred):
     
 def load_data(database_filepath):
     engine = create_engine('sqlite:///' + database_filepath)
-    df = pd.read_sql_table(database_filepath, con=engine)
+    df = pd.read_sql_table('DataTable', con=engine)
     return df['message'].values, df.iloc[:,4:].values, list(df.columns[4:])
 
 
@@ -66,21 +64,36 @@ def build_model():
      
     parameters = {
         'vect__max_df': [0.10, 0.15, 0.20],
-        'clf__estimator__n_estimators': [10, 15, 20],       
-        'clf__estimator__min_samples_split': [2, 4, 6]      
+        'clf__estimator__n_estimators': [10, 15, 20],
+        'clf__estimator__min_samples_split': [2, 4, 6]
     }
     cv = GridSearchCV(pipeline, param_grid=parameters, verbose=10, scoring=make_scorer(performance_metric))
     return cv
 
 
-def evaluate_model(model, X_test, Y_test, category_names):
+def evaluate_model(model, X_test, Y_test, category_names, database_filepath):
     y_pred = model.predict(X_test)
-    
+    result_cols = ['accuracy', 'precision', 'recall', 'f1-score']
+    indices = []
+    df_2d_arr = []
     for i, cat in enumerate(category_names):
         print(cat)
         print('\taccuracy: ', accuracy_score(Y_test[:,i], y_pred[:,i]), '\tprecision: ', precision_score(Y_test[:,i], y_pred[:,i], average='weighted'), '\trecall: ', recall_score(Y_test[:,i], y_pred[:,i], average='weighted'), '\tf1-score: ', f1_score(Y_test[:,i], y_pred[:,i], average='weighted'))
         print('\n')
-
+        
+        indices.append(cat)
+        row = []
+        row.append(accuracy_score(Y_test[:,i], y_pred[:,i]))
+        row.append(precision_score(Y_test[:,i], y_pred[:,i], average='weighted'))
+        row.append(recall_score(Y_test[:,i], y_pred[:,i], average='weighted'))
+        row.append(f1_score(Y_test[:,i], y_pred[:,i], average='weighted'))
+        df_2d_arr.append(row)
+        
+    result_df = pd.DataFrame(df_2d_arr, index=indices, columns=result_cols)
+    
+    engine = create_engine('sqlite:///' + database_filepath)
+    result_df.to_sql('ResultTable', engine, index=False, if_exists= 'replace')
+    
 
 def save_model(model, model_filepath):
     pickle.dump(model.best_estimator_, open(model_filepath, 'wb'))
@@ -100,7 +113,7 @@ def main():
         model.fit(X_train, Y_train)
         
         print('Evaluating model...')
-        evaluate_model(model, X_test, Y_test, category_names)
+        evaluate_model(model, X_test, Y_test, category_names, database_filepath)
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
         save_model(model, model_filepath)

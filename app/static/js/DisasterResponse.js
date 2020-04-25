@@ -1,15 +1,38 @@
 $(document).ready(function(){
+	let messageRow = d3.select("#message_row"),
+		predictionRow = d3.select("#prediction_row"),
+		predictedPara = d3.select("#predicted_classes"),
+		typedPara = d3.select("#typed_message"),
+		queryInput = d3.select("#query"),
+		query;
+		
+	messageRow.style("display", "none");
+	predictionRow.style("display", "none");
 	$('#submit_button').on('click', function(event){
+		query = $('#query').val();
+		queryInput.property("value", "");
+		messageRow.style("display", "none");
+		predictionRow.style("display", "none");
+		predictedPara.selectAll("*").remove();
 		$.ajax({
 			data:{
-				query: $('#query').val()
+				query: query
 			},
 			type:'POST',
 			url: '/predict'
 		})
 		.done(function(data){
 			if(data.result){
-				$("#predicted_classes").html(data.result);
+				messageRow.style("display", null);
+				predictionRow.style("display", null);
+				typedPara.html(query);
+				data.result.forEach(function(r){
+					predictedPara.append("span")
+									.attr("class", "badge")
+									.style("background-color", "#479e47")
+									.html(r);
+				});
+				$().html();
 			}
 		});
 	});

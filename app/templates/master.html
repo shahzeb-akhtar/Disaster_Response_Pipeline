@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!--script src="https://cdn.plot.ly/plotly-latest.min.js"></script-->
 	<script src="../static/js/d3-v4.js"></script>
 	<script src="../static/js/DisasterResponse.js"></script>
@@ -18,56 +19,70 @@
 <body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
+	<div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">Disaster Response Project</a>
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+            <a class="navbar-brand" href="#">Disaster Response Project</a>
+        </div>		
+        <div id="myNavbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="https://www.udacity.com/course/data-scientist-nanodegree--nd025" target="_blank">Udacity Nanodegree</a></li>
+				<!--li><a href="https://github.com/shahzeb-akhtar" target="_blank">Contact</a></li-->
+				<li><a href="https://github.com/shahzeb-akhtar" target="_blank"><img src="../static/img/githublogo.png" alt="github" width="25px"></a></li>
+				<li><a href="https://www.linkedin.com/in/shahzebakhtar/" target="_blank"><img src="../static/img/linkedinlogo.png" alt="linkedin" width="25px"></a></li>
+			</ul>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="https://www.udacity.com/course/data-scientist-nanodegree--nd025">Udacity Nanodegree</a></li>
-                <li><a href="https://github.com/shahzeb-akhtar">Contact</a></li>
-            </ul>
-        </div>
-    </div>
+	</div>
 </nav>
 
-
 <div class="jumbotron">
-    <div class="container">
-        <h1 class="text-center">Disaster Response Project</h1>
-        <p class="text-center">Analyzing message data for disaster response</p>
-        <hr />
-      
-        <div class="row">
-			<div class="col-lg-10">
-				<input type="text" class="form-control form-control-lg" id="query" placeholder="Enter a message to classify"/>
+	<h1 class="text-center">Disaster Response Project</h1>
+	<p class="text-center">Analyzing message data for disaster response</p>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-10 col-md-10 col-lg-10">
+				<input type="text" id="query" class="form-control" placeholder="Enter a message to classify" autocomplete="on" />
 			</div>
-			<div class="col-lg-2">
-				<button id="submit_button" class="btn btn-lg btn-success">Classify Message</button>
+			<div class="col-sm-2 col-md-2 col-lg-2">
+				<button id="submit_button" class="btn btn-success pull-right">Classify Message</button>
 			</div>
-            <!--div class="col-lg-12 form-group-lg">
-			
-                <form action="/predict" method="POST">
-                    <input type="text" class="form-control form-control-lg" id="query" placeholder="Enter a message to classify">
-                    <div class="col-lg-offset-5">
-                        <button type="submit" class="btn btn-lg btn-success">Classify Message</button>
-                    </div>
-                </form>
-            </div-->
-        </div>
-		<div class="row"><p id="typed_message"></p></div>
-		<div class="row"><p id="predicted_classes"></p></div>
-    </div>
-</div>
+		</div>
+	</div>
+</div> 
 
-<div class="container">
+<div class="container-fluid">
+	<div class="row" id="message_row">
+		<div class="col-sm-3 col-md-3 col-lg-3">
+			<p style="font-weight:bold;">Typed Message:</p>
+		</div>
+		<div class="col-sm-9 col-md-9 col-lg-9">
+			<p id="typed_message"></p>
+		</div>
+	</div>
+	<div class="row" id="prediction_row">
+		<div class="col-sm-3 col-md-3 col-lg-3">
+			<p style="font-weight:bold;">Predicted Categories:</p>
+		</div>
+		<div class="col-sm-9 col-md-9 col-lg-9">
+			<p id="predicted_classes"></p>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
 	<div class="page-header">
 		<h1 class="text-center">Overview of Training Dataset</h1>
 	</div>
 </div>
-<div style="padding:10px;" id="chart_0"></div>
-<div style="padding:10px;" id="chart_1"></div>
-<div style="padding:10px;" id="chart_2"></div>
+<div class="container-fluid">
+	<div style="padding:10px;" id="chart_0"></div>
+	<div style="padding:10px;" id="chart_1"></div>
+	<div style="padding:10px;" id="chart_2"></div>
+</div>
+
 
 <script type="text/javascript">
 	const catsJSON = {{catsJSON | safe}};

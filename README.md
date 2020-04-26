@@ -32,28 +32,31 @@ To apply NLP skills learned as part of Udacity Data Science Nanodegree lesson to
 
 ```
 .
-├── app                                               # Code for web app
-    ├── static                                        # Static images and JS files
-        ├── img                                       # Images used in web app
-            ├── githublogo.png                        # github logo
-            ├── linkedinlogo.png                      # linkedin logo
-        ├── js                                        # JS files used in web app
-            ├── d3-v4.js                              # d3 file
-            ├── DisasterResponse.js                   # JS file for visualization and sending AJAX requests to get predictions
-    ├── templates                                     # Template files for web app
-        ├── master.html                               # HTML for index page
-    ├── run.py                                        # Python file to run the web app
-    
-├── data                                              # Data files 
-    ├── disaster_messages.csv                         # All disaster messages, with non-English messages translated in English
-    ├── disaster_categories.csv                       # Categories for all messages
-    ├── DisasterResponse.db                           # SQLite Database created through process_data.py file
-    ├── process_data.py                               # Python file to clean, transform CSV data and store in database file
-├── models                                            # Model files                  
-    ├── train_classifier.py                           # Python file to train a model, evaluate it, and save it in a pickle file
-    ├── classifier.pkl                                # Pickle file with saved model
-├── LICENSE                                           # License file
-├── README.md                                         # ReadMe file
+├── app                                          # Code for web app
+    ├── static                                   # Static images and JS files
+        ├── img                                  # Images used in web app
+            ├── githublogo.png                   # github logo
+            ├── linkedinlogo.png                 # linkedin logo
+        ├── js                                   # JS files used in web app
+            ├── d3-v4.js                         # d3 file
+            ├── DisasterResponse.js              # JS file for visualization and sending AJAX requests to get predictions
+    ├── templates                                # Template files for web app
+        ├── master.html                          # HTML for index page
+    ├── run.py                                   # Python file to run the web app
+├── data                                         # Data files 
+    ├── disaster_messages.csv                    # All disaster messages, with non-English messages translated in English
+    ├── disaster_categories.csv                  # Categories for all messages
+    ├── DisasterResponse.db                      # SQLite Database created through process_data.py file
+    ├── process_data.py                          # Python file to clean, transform CSV data and store in database file
+├── models                                       # Model files                  
+    ├── train_classifier.py                      # Python file to train a model, evaluate it, and save it in a pickle file
+    ├── classifier.pkl                           # Pickle file with saved model
+├── screen_shots                                 # Screen shots from web app
+    ├── categories                               # Bar chart for all categories
+    ├── corelation                               # Heat Map for co-relation between categories
+    ├── performance                              # Heat Map to show performance of model
+├── LICENSE                                      # License file
+├── README.md                                    # ReadMe file
 
 ```
 <h2 id="head4"> Instructions </h2>

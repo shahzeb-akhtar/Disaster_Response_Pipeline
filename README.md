@@ -76,12 +76,15 @@ To apply NLP skills learned as part of Udacity Data Science Nanodegree lesson to
 Below are few charts summarizing the results. These charts as well a working model can be accessed at https://disaster-webapp-viz.herokuapp.com/
 
 Chart belows the distribution of categories in the training data. As can be seen some categories are assigned to very few meesages thus creating data imbalance.
+
 ![categories in data](screen_shots/categories.png)
 
 Chart below shows the co-relation between categories. As can be seen some categories are co-related. *request* with *aid_related* and *direct_report*. *aid_related* with *related*, *request*, *food* and *other_aid*. *infrastructure_related* with *aid_centers*, *hospitals* and *other_infrastructure*. *transport* with *floods*. *weather_related* with *floods*, *storm* and *earthquake*.
+
 ![corelation between categories](screen_shots/corelation.png)
 
 Chart below shows the performance of the model across categories. As can be seen F1 scaore for some categories such as *related*, *request*, *aid_related*, *weather_related* and *direct_report*. This could be due to data imbalance and co-relation with other categories.
+
 ![performace of model](screen_shots/performance.png)
 
 <h2 id="head6"> Acknowledgements </h2>
@@ -94,8 +97,4 @@ Chart below shows the performance of the model across categories. As can be seen
 <h2 id="head7"> Author </h2>
 
 Shahzeb Akhtar
-
 https://www.linkedin.com/in/shahzebakhtar/
-
-
-

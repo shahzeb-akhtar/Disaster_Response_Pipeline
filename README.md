@@ -32,28 +32,31 @@ To apply NLP skills learned as part of Udacity Data Science Nanodegree lesson to
 
 ```
 .
-├── app                                               # Code for web app
-    ├── static                                        # Static images and JS files
-        ├── img                                       # Images used in web app
-            ├── githublogo.png                        # github logo
-            ├── linkedinlogo.png                      # linkedin logo
-        ├── js                                        # JS files used in web app
-            ├── d3-v4.js                              # d3 file
-            ├── DisasterResponse.js                   # JS file for visualization and sending AJAX requests to get predictions
-    ├── templates                                     # Template files for web app
-        ├── master.html                               # HTML for index page
-    ├── run.py                                        # Python file to run the web app
-    
-├── data                                              # Data files 
-    ├── disaster_messages.csv                         # All disaster messages, with non-English messages translated in English
-    ├── disaster_categories.csv                       # Categories for all messages
-    ├── DisasterResponse.db                           # SQLite Database created through process_data.py file
-    ├── process_data.py                               # Python file to clean, transform CSV data and store in database file
-├── models                                            # Model files                  
-    ├── train_classifier.py                           # Python file to train a model, evaluate it, and save it in a pickle file
-    ├── classifier.pkl                                # Pickle file with saved model
-├── LICENSE                                           # License file
-├── README.md                                         # ReadMe file
+├── app                                 # Code for web app
+    ├── static                          # Static images and JS files
+        ├── img                         # Images used in web app
+            ├── githublogo.png          # github logo
+            ├── linkedinlogo.png        # linkedin logo
+        ├── js                          # JS files used in web app
+            ├── d3-v4.js                # d3 file
+            ├── DisasterResponse.js     # JS file for visualization and sending AJAX requests to get predictions
+    ├── templates                       # Template files for web app
+        ├── master.html                 # HTML for index page
+    ├── run.py                          # Python file to run the web app
+├── data                                # Data files 
+    ├── disaster_messages.csv           # All disaster messages, with non-English messages translated in English
+    ├── disaster_categories.csv         # Categories for all messages
+    ├── DisasterResponse.db             # SQLite Database created through process_data.py file
+    ├── process_data.py                 # Python file to clean, transform CSV data and store in database file
+├── models                              # Model files                  
+    ├── train_classifier.py             # Python file to train a model, evaluate it, and save it in a pickle file
+    ├── classifier.pkl                  # Pickle file with saved model
+├── screen_shots                        # Screen shots from web app
+    ├── categories                      # Bar chart for all categories
+    ├── corelation                      # Heat Map for co-relation between categories
+    ├── performance                     # Heat Map to show performance of model
+├── LICENSE                             # License file
+├── README.md                           # ReadMe file
 
 ```
 <h2 id="head4"> Instructions </h2>
@@ -72,11 +75,17 @@ To apply NLP skills learned as part of Udacity Data Science Nanodegree lesson to
 <h2 id="head5"> Summary of the results </h2>
 Below are few charts summarizing the results. These charts as well a working model can be accessed at https://disaster-webapp-viz.herokuapp.com/
 
-Chart belows the distribution of categories in the training data
+Chart belows the distribution of categories in the training data. As can be seen some categories are assigned to very few meesages thus creating data imbalance.
 
-Chart below shows the co-relation between categories
+![categories in data](screen_shots/categories.png)
 
-Chart below shows the performance of the model across categories
+Chart below shows the co-relation between categories. As can be seen some categories are co-related. *request* with *aid_related* and *direct_report*. *aid_related* with *related*, *request*, *food* and *other_aid*. *infrastructure_related* with *aid_centers*, *hospitals* and *other_infrastructure*. *transport* with *floods*. *weather_related* with *floods*, *storm* and *earthquake*.
+
+![corelation between categories](screen_shots/corelation.png)
+
+Chart below shows the performance of the model across categories. As can be seen F1 scaore for some categories such as *related*, *request*, *aid_related*, *weather_related* and *direct_report*. This could be due to data imbalance and co-relation with other categories.
+
+![performace of model](screen_shots/performance.png)
 
 <h2 id="head6"> Acknowledgements </h2>
 
@@ -88,8 +97,4 @@ Chart below shows the performance of the model across categories
 <h2 id="head7"> Author </h2>
 
 Shahzeb Akhtar
-
 https://www.linkedin.com/in/shahzebakhtar/
-
-
-

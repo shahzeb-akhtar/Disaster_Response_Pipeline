@@ -17,6 +17,11 @@ from sklearn.metrics import make_scorer, f1_score, precision_score, recall_score
 
 url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 def tokenize(text):
+    '''
+        tokenize text
+        input: text message
+        output: list of clean tokens
+    '''
     detected_urls = re.findall(url_regex, text)
     for url in detected_urls:
         text = text.replace(url, "urlplaceholder")
@@ -33,13 +38,14 @@ def tokenize(text):
     
 # Define performance metric for use in grid search scoring object
 def performance_metric(y_true, y_pred):
-    """Calculate median F1 score for all of the output classifiers
-        Args:
-        y_true: array. Array containing actual labels.
-        y_pred: array. Array containing predicted labels.
-        Returns:
-        score: float. Mean F1 score for all of the output classifiers
-        """
+    """
+        Calculate mean weighted F1 score for all of the output classifiers
+        input:
+            y_true: List containing actual labels.
+            y_pred: List containing predicted labels.
+        output:
+            Mean F1 score for all of the output classifiers
+    """
     f1_arr = []
     for i in range(np.shape(y_pred)[1]):
         f1 = f1_score(np.array(y_true)[:, i], y_pred[:, i], average='weighted')
@@ -49,12 +55,20 @@ def performance_metric(y_true, y_pred):
     return score
     
 def load_data(database_filepath):
+    '''
+        load data from a database file and split it into messages and categories values
+        input: path to database file
+        output: Values of messages, Values of all categories, name of all categories
+    '''
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('DataTable', con=engine)
     return df['message'].values, df.iloc[:,4:].values, list(df.columns[4:])
 
 
 def build_model():
+    '''
+        Prepare a grid search object with parameters and pipeline of ML classifier
+    '''
     #Best Parameters: {'clf__estimator__min_samples_split': 4, 'clf__estimator__n_estimators': 15, 'vect__max_df': 0.1}
     pipeline = Pipeline([
          ('vect', CountVectorizer(tokenizer=tokenize)), # tokenizer=tokenize
@@ -72,6 +86,17 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names, database_filepath):
+    '''
+        Evaluate the predition from model. Store evaluation metrics in a table
+        input:
+            model - the model to evaluate_model
+            X_test - Data values on which to predict classes
+            Y_test - Actual classes for X_test 
+            category_names - List of all categories
+            database_filepath - path of database file
+        output: None
+        prints the evaluation metrics for all categories as well as save it in a table in database
+    '''
     y_pred = model.predict(X_test)
     result_cols = ['accuracy', 'precision', 'recall', 'f1-score']
     indices = []
@@ -96,10 +121,21 @@ def evaluate_model(model, X_test, Y_test, category_names, database_filepath):
     
 
 def save_model(model, model_filepath):
+    '''
+        Save model in a pickle file
+        input:
+            model - the grid search cv model to save
+            model_filepath - path of pickle file
+        output: None
+        Saves the best estimator from the model to a pickle file
+    '''
     pickle.dump(model.best_estimator_, open(model_filepath, 'wb'))
     
 
 def main():
+    '''
+        Main function - Given database file path and pickle model file path. It loads the data, builds a model. Trains and evaluates the model. Then saves it in a pickle file.
+    '''
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))

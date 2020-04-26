@@ -13,6 +13,11 @@ from sqlalchemy import create_engine, inspect
 app = Flask(__name__)
 
 def tokenize(text):
+    '''
+    tokenize text
+    input: text message
+    output: list of clean tokens
+    '''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -67,14 +72,17 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/')
 @app.route('/index')
 def index():
-    
-    # render web page send data for charts
+    '''
+        render main web page
+    '''
     return render_template('master.html', catsJSON=sum_df.to_json(orient='records'), corr_arr=corr_arr.tolist(), results_arr = results_arr.tolist())
 
 # web page that handles user query and displays model results
 @app.route('/predict', methods=['POST'])
 def predict():
-    # save user input in query
+    '''
+        send classes predictions as AJAX response
+    '''
     query = request.form.getlist('query')[0]    
     
     predicted_classes = []

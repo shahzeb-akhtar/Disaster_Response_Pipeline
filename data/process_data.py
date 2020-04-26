@@ -4,6 +4,14 @@ import numpy as np
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+        load data from a messages and categories CSV files
+        input:
+            messages_filepath - path to messages csv file
+            categories_filepath - path to categories csv file
+        output:
+            Data frame including both messages and categories together
+    '''
     #read csv files
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
@@ -15,6 +23,13 @@ def load_data(messages_filepath, categories_filepath):
     
     
 def clean_data(df):
+    '''
+        Clean the data
+        input:
+            df - Data Frame with raw data
+        output:
+            Cleaned data frame
+    '''
      # create a dataframe of the 36 individual category columns
     categories_split = df['categories'].str.split(';', expand=True)
     
@@ -55,11 +70,23 @@ def clean_data(df):
     return new_df
 
 def save_data(df, database_filename):
+    '''
+        Savs data in a SQLite database
+        input:
+            df - Data frame to save
+            database_filename - path of database file
+        output: None
+            Saves the dataframe in a tabel in database file
+    '''
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('DataTable', engine, index=False, if_exists= 'replace')  
 
 
 def main():
+    '''
+        Main function.
+        Given the path of  messages and categories CSV files and path to database file. It loads the CSV data, cleans it and saves it in the database file.
+    '''
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]

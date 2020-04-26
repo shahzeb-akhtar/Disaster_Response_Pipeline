@@ -75,10 +75,10 @@ To apply NLP skills learned as part of Udacity Data Science Nanodegree lesson to
 <h2 id="head5"> Summary of the results </h2>
 Below are few charts summarizing the results. These charts as well a working model can be accessed at https://disaster-webapp-viz.herokuapp.com/
 
-Chart belows the distribution of categories in the training data
+Chart belows the distribution of categories in the training data. As can be seen some categories are assigned to very few meesages thus creating data imbalance.
 ![categories in data](screen_shots/categories.png)
 
-Chart below shows the co-relation between categories
+Chart below shows the co-relation between categories. As can be seen some categories are co-related. 'request' with 'aid_related' and 'direct_report'. 'aid_related'
 ![corelation between categories](screen_shots/corelation.png)
 
 Chart below shows the performance of the model across categories

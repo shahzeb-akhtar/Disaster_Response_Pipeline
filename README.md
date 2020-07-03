@@ -73,7 +73,7 @@ To apply NLP skills learned as part of Udacity Data Science Nanodegree lesson to
 3. Go to http://127.0.0.1:3001/
 
 <h2 id="head5"> Summary of the results </h2>
-Below are few charts summarizing the results. These charts as well a working model can be accessed [here](https://disaster-webapp-viz.herokuapp.com/)
+Below are few charts summarizing the results. These charts as well a working model can be accessed <a href="https://disaster-webapp-viz.herokuapp.com/">here</a>
 
 Chart belows the distribution of categories in the training data. As can be seen some categories are assigned to very few meesages thus creating data imbalance.
 

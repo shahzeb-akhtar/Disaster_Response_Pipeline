@@ -73,7 +73,7 @@ To apply NLP skills learned as part of Udacity Data Science Nanodegree lesson to
 3. Go to http://127.0.0.1:3001/
 
 <h2 id="head5"> Summary of the results </h2>
-Below are few charts summarizing the results. These charts as well a working model can be accessed at https://disaster-webapp-viz.herokuapp.com/
+Below are few charts summarizing the results. These charts as well a working model can be accessed [here](https://disaster-webapp-viz.herokuapp.com/)
 
 Chart belows the distribution of categories in the training data. As can be seen some categories are assigned to very few meesages thus creating data imbalance.
 
@@ -89,12 +89,9 @@ Chart below shows the performance of the model across categories. As can be seen
 
 <h2 id="head6"> Acknowledgements </h2>
 
-<ul>
- <li> Udacity https://www.udacity.com/
- <li> Figure Eight https://appen.com/datasets/combined-disaster-response-data/
-</ul>
+- [Udacity](https://www.udacity.com/)
+- [Figure Eight](https://appen.com/datasets/combined-disaster-response-data/)
 
 <h2 id="head7"> Author </h2>
 
-Shahzeb Akhtar
-https://www.linkedin.com/in/shahzebakhtar/
+[Shahzeb Akhtar](https://www.linkedin.com/in/shahzebakhtar/)
